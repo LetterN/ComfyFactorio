@@ -11,6 +11,11 @@ local Public = {}
 local module_name = '[color=blue][Charging station][/color] '
 local charging_station_name = Gui.uid_name()
 
+local accumulator_types = {'accumulator'}
+if script.active_mods['MtnFortressAddons'] then
+    accumulator_types = {'accumulator', 'accumulator-mk2', 'accumulator-mk3'}
+end
+
 local function draw_charging_gui(player, activate_custom_buttons)
     local button =
         player.gui.top[charging_station_name] or
@@ -36,7 +41,12 @@ local function draw_charging_gui(player, activate_custom_buttons)
 end
 
 local function discharge_accumulators(surface, position, force, power_needs)
-    local accumulators = surface.find_entities_filtered { name = 'accumulator', force = force, position = position, radius = 13 }
+    local accumulators = surface.find_entities_filtered({
+        name = accumulator_types,
+        force = force,
+        position = position,
+        radius = 13
+    })
     local power_drained = 0
     power_needs = power_needs * 1
     for _, accu in pairs(accumulators) do
